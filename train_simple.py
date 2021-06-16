@@ -486,9 +486,9 @@ def main():
     logger.info(f'Resuming at best epoch')
 
     if 'state_dict' in model_dict.keys():
-        model.load_state_dict(model_dict['state_dict'])
+        model.module.load_state_dict(model_dict['state_dict'])
     else:
-        model.load_state_dict(model_dict)
+        model.module.load_state_dict(model_dict)
 
     model.eval()
 
