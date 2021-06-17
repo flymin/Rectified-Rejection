@@ -1,11 +1,44 @@
 import torch
 import numpy as np
+import logging
+import os
 from sklearn.metrics import roc_auc_score, roc_curve
 
 
 def clamp(X, lower_limit, upper_limit):
     return torch.max(torch.min(X, upper_limit), lower_limit)
 
+
+def make_logger(run_name, log_output):
+    if log_output is not None:
+        if run_name == None:
+            run_name = log_output.split('/')[-1].split('.')[0]
+        else:
+            log_output = os.path.join(log_output, f'{run_name}.log')
+    logger = logging.getLogger()
+    logger.propagate = False
+    log_filepath = log_output if log_output is not None else os.path.join(
+        'results/log', f'{run_name}.log')
+
+    log_dir = os.path.dirname(os.path.abspath(log_filepath))
+    if not os.path.exists(log_dir):
+        os.makedirs(log_dir)
+
+    if not logger.handlers:  # execute only if logger doesn't already exist
+        file_handler = logging.FileHandler(log_filepath, 'a', 'utf-8')
+        stream_handler = logging.StreamHandler(os.sys.stdout)
+
+        formatter = logging.Formatter(
+            '[%(levelname)s] %(asctime)s > %(message)s',
+            datefmt='%Y-%m-%d %H:%M:%S')
+
+        file_handler.setFormatter(formatter)
+        stream_handler.setFormatter(formatter)
+
+        logger.addHandler(file_handler)
+        logger.addHandler(stream_handler)
+        logger.setLevel(logging.INFO)
+    return logger
 #####################
 # Auto file name
 #####################
@@ -97,3 +130,11 @@ def calculate_FPR_TPR(correct, wrong, tpr_ref=0.95):
     index_w = (torch.where(wrong > T)[0]).size(0)
     acc = index_c / (index_c + index_w)
     return FPR_thred, acc
+
+
+def judge_thresh(out, thresh, min_distance=False):
+    # True for pass, False for reject
+    if min_distance:
+        return (out < thresh).long()
+    else:
+        return (out > thresh).long()
