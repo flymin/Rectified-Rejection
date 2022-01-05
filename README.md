@@ -1,3 +1,53 @@
+This forked repo implements an evalution for Rectified Rejection as an AE
+detection methods. The evaluation metric is aligned with [flymin/AEdetection](https://github.com/flymin/AEdetection).
+For more details, please check that repo.
+
+The training procedures show respect to the original repo.
+
+We trained the models by ourselves. For the weights, please check
+[Google Drive](https://drive.google.com/file/d/1TVvtsRwgj6Tq9HkpKhMqaWSw6uh1s92q/view?usp=sharing).
+We use `tools/attack_RR.py` to generate AE samples and `tools/test_RR.py` for
+evaluation.
+
+After Download and extract the `.tar` file, the `trained_models` directory
+should look as follows (`trained_models/RRAE` comes from executing `tools/attack_RR.py`)
+```
+trained_models/
+├── CIFAR-10
+│   ├── PGDAT_densenet169BN_adaptiveT...
+│   │   ├── model_best.pth
+│   │   ├── model_best_s.pth
+│   │   └── output_simple.log
+│   └── PGDAT_PreActResNet18_...
+│       ├── model_best.pth
+│       ├── output.log
+│       └── output_simple.log
+├── gtsrb
+│   └── PGDAT_ResNet18BN_adaptiveT...
+│       ├── model_best.pth
+│       └── output_simple.log
+├── MNIST
+│   └── PGDAT_Mnist2LayerNetBN_adaptiveT...
+│       ├── model_best.pth
+│       └── output_simple.log
+└── RRAE
+    ├── BIM
+    │   ├── cifar10
+    │   │   └── RR-cifar10-2021-06-17-11-01-20.log
+    │   ├── cifar10_BIMinf_2432.pt
+    ....
+    └── PGDL2
+        └── ...
+```
+
+For testing command examples, please check:
+[scripts/run.sh](https://github.com/flymin/Rectified-Rejection/blob/main/scripts/run.sh).
+
+
+Below is the original readme.
+
+---
+
 # Adversarial Training with Rectified Rejection
 
 The code for the paper [Adversarial Training with Rectified Rejection](https://arxiv.org/abs/2105.14785).
